@@ -1,9 +1,157 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>First Page</title>
+	<title>First page</title>
 </head>
 <body>
-<h2>Hello World</h2>
+<h2>Challenges</h2>
+<p>Trailhead challenges work by running a series of API checks against a known Developer Edition instance.  The challenges are described as JSON files which are loaded alongside Trailhead content.  The API checks are in an array names <em>assessments</em> and in production if all the assessments evaluate to true the user earns the points for the unit.</p>
+<p>This README is an overall getting started with Trailhead.  Follow up with other readme's in the repo to learn more:</p>
+<ol>
+<li><a href="/ssekhar/trailhead-assessments/blob/master/assessments/README.md">assessments/README.md</a> - For specifics on how the JSON is generated for challenges and best practices for authoring them.</li>
+<li><a href="/ssekhar/trailhead-assessments/blob/master/test/README.md">test/README.md</a> - An overview on using the CLI based test harness and how to test your challenges for staging</li>
+<li><a href="/ssekhar/trailhead-assessments/blob/master/assessments/projects/README.md">assessments/projects/README.md</a> - How projects differ from trails for authoring purposes.</li>
+</ol>
+<h2><a id="user-content-getting-started" class="anchor" href="#getting-started" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Getting Started:</h2>
+<ol>
+<li>
+<p>Make sure you have <a href="https://www.ruby-lang.org/en/documentation/installation/">ruby on your system</a></p>
+<p>to check out have ruby in the terminal: rvm --default</p>
+<p>to upgrade to the latest version: curl -L <a href="https://get.rvm.io">https://get.rvm.io</a> | bash -s stable --autolibs=enabled --ruby</p>
+</li>
+<li>
+<p>Ensure you’re a contributor to the developerforce GitHub repo <a href="https://github.com/developerforce">https://github.com/developerforce</a></p>
+</li>
+<li>
+<p>Clone <a href="https://github.com/developerforce/trailhead-assessments">https://github.com/developerforce/trailhead-assessments</a> into a working folder.</p>
+</li>
+<li>
+<p><strong>Switch to the staging branch.</strong>  All challenge development is done on staging prior to being merged into master.</p>
+</li>
+<li>
+<p>Check to be sure you <em>are actually on the staging branch</em>.  If you are wondering how to do that, take a step back and <a href="http://readwrite.com/2013/09/30/understanding-github-a-journey-for-beginners-part-1">read up on using git and Github</a>.</p>
+</li>
+<li>
+<p>If you are creating interactive challenges you will need to some <a href="https://www.ruby-lang.org/en/documentation/quickstart/">ruby basics</a>.  We use the lowest common possible form of ruby, but it is still ruby being evaluated.</p>
+</li>
+</ol>
+<p>Trailhead content, including challenges, are managed by Chris Duarte and Sandeep Bhanot. If you are developing assessments and haven't talked to them, you are probably doing it wrong.</p>
+<p>Questions about Trailhead authoring, how JSON works, and why your ruby confirm script is crashing can be sent to #content-release in Slack or Jeff Douglas.</p>
+<p><em>Running the Ruby Harness</em></p>
+<p><strong>NOTE: if you are developing challenges you should be on the staging branch</strong></p>
+<p>First <a href="https://gorails.com/setup/osx/10.9-mavericks">setup Ruby</a>.</p>
+<p>Once you have cloned this project, you can run :</p>
+<pre><code>ruby test.rb -h                    (help)
+ruby test.rb {dir/scriptname}      (run json)
+ruby test.rb -v {dir/scriptname}   (run json in verbose mode)
+</code></pre>
+<p>The overall config json looks like so:</p>
+<div class="highlight highlight-source-json"><pre>{
+	<span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span>:<span class="pl-s"><span class="pl-pds">"</span>Create a Validation that a Contact must be in the Account's ZIP Code<span class="pl-pds">"</span></span>,
+	<span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>:<span class="pl-s"><span class="pl-pds">"</span>To complete this assessment, add a validation rule which will block the insertion of a contact if the ZIP code of the contact does not match the account.<span class="pl-pds">"</span></span>,
+	<span class="pl-s"><span class="pl-pds">"</span>requirements<span class="pl-pds">"</span></span>: [
+		<span class="pl-s"><span class="pl-pds">"</span>The validation rule must be called 'Contact must be in Account ZIP Code'<span class="pl-pds">"</span></span>,
+		<span class="pl-s"><span class="pl-pds">"</span>A contact with a ZIP code that does not match the associated Account ZIP should return with a validation error and not be inserted<span class="pl-pds">"</span></span>
+	],
+
+	<span class="pl-s"><span class="pl-pds">"</span>assessment<span class="pl-pds">"</span></span>: [
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>action<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Find the Validation Rule named 'Contact must be in Account ZIP Code'<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>endpoint<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>/services/data/v30.0/tooling/query/?q=<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>parameter<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>SELECT Fullname, ValidationName from ValidationRule where ValidationName = 'Contact_must_be_in_Account_ZIP_Code'<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>confirm<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>result<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>The validation rule was found<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>The validation rule was not found<span class="pl-pds">"</span></span>
+        },
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>action<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Check that the rule refers to 'PostalCode'<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>result-index<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>last<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>result-array-index<span class="pl-pds">"</span></span>: <span class="pl-c1">0</span>,
+            <span class="pl-s"><span class="pl-pds">"</span>result-field<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>endpoint<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>{VAR}<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>parameter<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>confirm<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>result.Metadata.errorConditionFormula.index('PostalCode') &gt; 0<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>The validation rule references a Postal Code field<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>The validation rule does not reference the Postal Code field<span class="pl-pds">"</span></span>
+        },
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>action<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Attempt to insert a Contact that does not match the Account ShippingPostalCode<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>endpoint<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>/services/data/v30.0/tooling/executeAnonymous/?anonymousBody=<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>parameter<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Account a = new Account(Name='TestAccount',ShippingPostalCode='60613');insert a;Contact c = new Contact(LastName='Test',AccountId=a.Id);insert c; delete a; delete c;<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>confirm<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>result.exceptionMessage != '' &amp;&amp; result.exceptionMessage.index('FIELD_CUSTOM_VALIDATION_EXCEPTION') &gt; 0<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>success<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>A contact could not be added without sharing the email domain of the account<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>The validation rule failed to enforce the business logic<span class="pl-pds">"</span></span>
+        }
+    ]
+}</pre></div>
+</article>
+  </div>
+
+
+  </div>
+  <div class="modal-backdrop js-touch-events"></div>
+</div>
+
+    </div>
+  </div>
+
+  </div>
+
+      
+<div class="container-lg site-footer-container">
+  <div class="site-footer " role="contentinfo">
+    <ul class="site-footer-links float-right">
+      <li><a href="https://developer.github.com/enterprise/2.11" data-ga-click="Footer, go to api, text:api">API</a></li>
+      <li><a href="https://training.github.com" data-ga-click="Footer, go to training, text:training">Training</a></li>
+      <li><a href="https://shop.github.com" data-ga-click="Footer, go to shop, text:shop">Shop</a></li>
+        <li><a href="https://github.com/blog">Blog</a></li>
+        <li><a href="https://github.com/about">About</a></li>
+
+    </ul>
+
+    <a href="https://git.soma.salesforce.com" aria-label="Homepage" class="site-footer-mark" title="GitHub Enterprise Version 2.11.3">
+      <svg aria-hidden="true" class="octicon octicon-mark-github" height="24" version="1.1" viewBox="0 0 16 16" width="24"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+</a>
+    <ul class="site-footer-links">
+      <li>&copy; 2017 <span title="0.23414s from git-soma-salesforce-com-primary">GitHub</span>, Inc.</li>
+        <li><a href="https://help.github.com/enterprise/2.11">Help</a></li>
+          <li><a href="https://confluence.internal.salesforce.com/display/corescm/GitHub+Enterprise+FAQs">Support</a></li>
+    </ul>
+  </div>
+</div>
+
+
+
+  <div id="ajax-error-message" class="ajax-error-message flash flash-error">
+    <svg aria-hidden="true" class="octicon octicon-alert" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M8.865 1.52c-.18-.31-.51-.5-.87-.5s-.69.19-.87.5L.275 13.5c-.18.31-.18.69 0 1 .19.31.52.5.87.5h13.7c.36 0 .69-.19.86-.5.17-.31.18-.69.01-1L8.865 1.52zM8.995 13h-2v-2h2v2zm0-3h-2V6h2v4z"/></svg>
+    <button type="button" class="flash-close js-flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
+      <svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"/></svg>
+    </button>
+    You can't perform that action at this time.
+  </div>
+
+
+    
+    <script crossorigin="anonymous" integrity="sha256-m+J/NoR59Mraotv0ZCx5ia+sOW1sYew+xBEqoK0klKs=" src="https://git.soma.salesforce.com/assets/frameworks-9be27f368479f4cadaa2dbf4642c7989afac396d6c61ec3ec4112aa0ad2494ab.js"></script>
+    
+    <script async="async" crossorigin="anonymous" integrity="sha256-4oed+reg0xyTg1lkYYCqHGwl5g2u3lzHO18q3n54Gdg=" src="https://git.soma.salesforce.com/assets/github-e2879dfab7a0d31c938359646180aa1c6c25e60daede5cc73b5f2ade7e7819d8.js"></script>
+    
+    
+    
+    
+  <div class="js-stale-session-flash stale-session-flash flash flash-warn flash-banner d-none">
+    <svg aria-hidden="true" class="octicon octicon-alert" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M8.865 1.52c-.18-.31-.51-.5-.87-.5s-.69.19-.87.5L.275 13.5c-.18.31-.18.69 0 1 .19.31.52.5.87.5h13.7c.36 0 .69-.19.86-.5.17-.31.18-.69.01-1L8.865 1.52zM8.995 13h-2v-2h2v2zm0-3h-2V6h2v4z"/></svg>
+    <span class="signed-in-tab-flash">You signed in with another tab or window. <a href="">Reload</a> to refresh your session.</span>
+    <span class="signed-out-tab-flash">You signed out in another tab or window. <a href="">Reload</a> to refresh your session.</span>
+  </div>
+  <div class="facebox" id="facebox" style="display:none;">
+  <div class="facebox-popup">
+    <div class="facebox-content" role="dialog" aria-labelledby="facebox-header" aria-describedby="facebox-description">
+    </div>
+    <button type="button" class="facebox-close js-facebox-close" aria-label="Close modal">
+      <svg aria-hidden="true" class="octicon octicon-x" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path fill-rule="evenodd" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z"/></svg>
+    </button>
+  </div>
+</div>
 </body>
 </html>
